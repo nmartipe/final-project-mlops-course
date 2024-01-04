@@ -1,6 +1,13 @@
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
+import pandas as pd
 
+
+def load_clean_data(file_path):
+    df = pd.read_csv(file_path)
+    df.columns = df.columns.str.strip()
+    df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+    return df
 
 def process_data(
     X, categorical_features=[], label=None, training=True, encoder=None, lb=None
@@ -51,7 +58,7 @@ def process_data(
         y = np.array([])
 
     X_categorical = X[categorical_features].values
-    X_continuous = X.drop(*[categorical_features], axis=1)
+    X_continuous = X.drop(categorical_features, axis=1)
 
     if training is True:
         encoder = OneHotEncoder(sparse=False, handle_unknown="ignore")
