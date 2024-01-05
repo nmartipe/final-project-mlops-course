@@ -9,9 +9,7 @@ def load_clean_data(file_path):
     df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
     return df
 
-def process_data(
-    X, categorical_features=[], label=None, training=True, encoder=None, lb=None
-):
+def process_data(df, categorical_features=[], label=None):
     """ Process the data used in the machine learning pipeline.
 
     Processes the data using one hot encoding for the categorical features and a
@@ -52,26 +50,25 @@ def process_data(
     """
 
     if label is not None:
-        y = X[label]
-        X = X.drop([label], axis=1)
+        y = df[label]
+        X = df.drop([label], axis=1)
     else:
         y = np.array([])
 
-    X_categorical = X[categorical_features].values
+    X_categorical = X[categorical_features]
+
+    encoder = OneHotEncoder(sparse=False, handle_unknown="ignore")
+    lb = LabelBinarizer()
+
+    # Apply OneHotEncoding to categorical features
+    X_categorical_encoded = encoder.fit_transform(X_categorical)
+    X_categorical_encoded_columns = encoder.get_feature_names_out(categorical_features)
+    X_categorical_encoded_df = pd.DataFrame(X_categorical_encoded, columns=X_categorical_encoded_columns)
+
+    # Apply LabelBinarizer to labels
+    y = lb.fit_transform(y.values).ravel()
+
     X_continuous = X.drop(categorical_features, axis=1)
-
-    if training is True:
-        encoder = OneHotEncoder(sparse=False, handle_unknown="ignore")
-        lb = LabelBinarizer()
-        X_categorical = encoder.fit_transform(X_categorical)
-        y = lb.fit_transform(y.values).ravel()
-    else:
-        X_categorical = encoder.transform(X_categorical)
-        try:
-            y = lb.transform(y.values).ravel()
-        # Catch the case where y is None because we're doing inference.
-        except AttributeError:
-            pass
-
-    X = np.concatenate([X_continuous, X_categorical], axis=1)
-    return X, y, encoder, lb
+    X = pd.concat([X_continuous, X_categorical_encoded_df], axis=1)
+    
+    return X, y, encoder
