@@ -5,11 +5,13 @@ import joblib
 import numpy as np
 import json
 
+def load_model(model_path):
+    return joblib.load(model_path)
 
-
-def save_model_and_encoder(model, model_path, encoder, encoder_path):
+def save_model_and_encoder(model, model_path, encoder, encoder_path, columns, col_path):
     joblib.dump(model, model_path)
     joblib.dump(encoder, encoder_path)
+    joblib.dump(columns, col_path)
 
 def train_model(X_train, y_train):
     """
