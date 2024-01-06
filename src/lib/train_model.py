@@ -1,5 +1,5 @@
 from utils.data import load_clean_data, process_data
-from utils.model import train_model, save_model_and_encoder, compute_model_metrics_by_slice, load_model
+from utils.model import train_model, save_model_and_encoder, compute_model_metrics_by_slice
 from sklearn.model_selection import train_test_split
 import json
 import logging
@@ -8,8 +8,9 @@ logger = logging.getLogger()
 
 data_path = '../data/census.csv'
 model_path = '../model/model.pkl'
-encoder_path = '../model/encoder.pkl'
-col_path = '../model/encoded_columns.pkl'
+encoder_path = '../data/encoder.pkl'
+col_path = '../data/encoded_columns.pkl'
+metrics_path = '../model/metrics.txt'
 
 cat_features = [
     "workclass",
@@ -35,7 +36,7 @@ logger.info("Saving model, encoder and columns...")
 save_model_and_encoder(model, model_path, encoder, encoder_path, X_train.columns, col_path)
 logger.info("Getting model metrics...")
 metrics = compute_model_metrics_by_slice(X_test, y_test, model, cat_features)
-logger.info("Saving model metrics...")
-with open('../model/metrics.txt', 'w') as f:
+logger.info("Saving model metrics in model/metrics.txt...")
+with open(metrics_path, 'w') as f:
     metrics_str = json.dumps(metrics, indent=2)
     f.write(metrics_str)

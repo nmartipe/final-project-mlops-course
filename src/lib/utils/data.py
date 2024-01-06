@@ -7,9 +7,8 @@ import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
 
-encoder_path = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(), './model/encoder.pkl')))
-model_path = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(), './model/model.pkl')))
-cols_path = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(), './model/encoded_columns.pkl')))
+encoder_path = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(), './data/encoder.pkl')))
+cols_path = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(), './data/encoded_columns.pkl')))
 
 
 def load_clean_data(file_path):
@@ -32,19 +31,15 @@ def process_data(df, categorical_features=[], label=None, inference = False):
 
     Inputs
     ------
-    X : pd.DataFrame
+    df : pd.DataFrame
         Dataframe containing the features and label. Columns in `categorical_features`
     categorical_features: list[str]
         List containing the names of the categorical features (default=[])
     label : str
         Name of the label column in `X`. If None, then an empty array will be returned
         for y (default=None)
-    training : bool
-        Indicator if training mode or inference/validation mode.
-    encoder : sklearn.preprocessing._encoders.OneHotEncoder
-        Trained sklearn OneHotEncoder, only used if training=False.
-    lb : sklearn.preprocessing._label.LabelBinarizer
-        Trained sklearn LabelBinarizer, only used if training=False.
+    inference : bool
+        Indicator if training mode or inference mode.
 
     Returns
     -------
@@ -55,9 +50,6 @@ def process_data(df, categorical_features=[], label=None, inference = False):
     encoder : sklearn.preprocessing._encoders.OneHotEncoder
         Trained OneHotEncoder if training is True, otherwise returns the encoder passed
         in.
-    lb : sklearn.preprocessing._label.LabelBinarizer
-        Trained LabelBinarizer if training is True, otherwise returns the binarizer
-        passed in.
     """
     if inference == False:
         logger.info("We are not in inference process")

@@ -1,7 +1,5 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
-import pandas as pd
-from typing import List
 from lib.utils.data import process_data
 from lib.utils.model import inference, load_model
 import uvicorn
@@ -25,7 +23,6 @@ cat_features = [
 model_path = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(), './model/model.pkl')))
 
 
-# Define a Pydantic model for the input data
 class InputData(BaseModel):
     age: int
     workclass: str
@@ -49,6 +46,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
+    logger.info("Welcome to the FastAPI Model Inference API!")
     return {"message": "Welcome to the FastAPI Model Inference API!"}
 
 @app.post("/predict")

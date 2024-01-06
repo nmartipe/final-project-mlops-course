@@ -45,7 +45,6 @@ def train_model(X_train, y_train):
 
     return best_model
 
-
 def compute_model_metrics(y, preds):
     """
     Validates the trained machine learning model using precision, recall, and F1.
@@ -79,6 +78,8 @@ def compute_model_metrics_by_slice(X, y, model, cat_features):
         Known labels, binarized.
     model : trained machine learning model
         The model to evaluate.
+    cat_features: list
+        List of categorical features
 
     Returns
     -------
@@ -104,7 +105,6 @@ def compute_model_metrics_by_slice(X, y, model, cat_features):
                 metrics[column] = {'precision': precision, 'recall': recall, 'fbeta': fbeta}
 
     return metrics
-
 
 def inference(model, X):
     """ Run model inferences and return the predictions.

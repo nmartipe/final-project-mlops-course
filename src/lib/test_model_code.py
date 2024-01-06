@@ -5,7 +5,9 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
-from your_module import save_model_and_encoder, train_model, compute_model_metrics
+from utils.model import load_model, train_model, compute_model_metrics
+
+model_path = '../model/model.pkl'
 
 @pytest.fixture
 def sample_data():
@@ -15,19 +17,9 @@ def sample_data():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     return X_train, X_test, y_train, y_test
 
-def test_save_model_and_encoder(sample_data):
-    model = RandomForestClassifier(random_state=42)
-    encoder = OneHotEncoder()
-    model_path = 'test_model.pkl'
-    encoder_path = 'test_encoder.pkl'
-
-    save_model_and_encoder(model, model_path, encoder, encoder_path)
-
-    assert os.path.exists(model_path)
-    assert os.path.exists(encoder_path)
-
-    os.remove(model_path)
-    os.remove(encoder_path)
+def test_load_model():
+    model = load_model(model_path)
+    assert model is not None
 
 def test_train_model(sample_data):
     X_train, _, y_train, _ = sample_data
