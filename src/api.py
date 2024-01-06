@@ -1,27 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
-from lib.utils.data import process_data
-from lib.utils.model import inference, load_model
+from src.lib.utils.data import process_data
+from src.lib.utils.model import inference, load_model
 import uvicorn
-import os
+from src.constants import Constants
 
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
-
-
-cat_features = [
-    "workclass",
-    "education",
-    "marital-status",
-    "occupation",
-    "relationship",
-    "race",
-    "sex",
-    "native-country",
-]
-model_path = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(), './model/model.pkl')))
-
 
 class InputData(BaseModel):
     age: int
@@ -54,9 +40,9 @@ def predict(data: InputData):
     logger.info("Solving '-' problem...")
     original_data = data.dict(by_alias=True)
     logger.info("Starting preprocessing process...")
-    X, *_ = process_data(original_data, categorical_features=cat_features, label="salary", inference = True)
+    X, *_ = process_data(original_data, categorical_features=Constants.CAT_FEATURES, label="salary", inference = True)
     logger.info("Data processed")
-    model = load_model(model_path)
+    model = load_model(Constants.MODEL_PATH)
     logger.info("Getting prediction...")
     prediction = inference(model, X)
     logger.info("Prediction is:")

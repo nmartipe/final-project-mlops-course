@@ -2,14 +2,11 @@ import numpy as np
 from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
 import pandas as pd
 import joblib
-import os
+from src.constants import Constants
+
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
-
-encoder_path = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(), './data/encoder.pkl')))
-cols_path = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(), './data/encoded_columns.pkl')))
-
 
 def load_clean_data(file_path):
     logger.info("Loading data...")
@@ -80,8 +77,8 @@ def process_data(df, categorical_features=[], label=None, inference = False):
         logger.info("We are in inference process")
         df = pd.DataFrame([df])
         logger.info("Loading encoder...")
-        encoder = joblib.load(encoder_path)
-        encoded_columns = joblib.load(cols_path).to_numpy()
+        encoder = joblib.load(Constants.ENCODER_PATH)
+        encoded_columns = joblib.load(Constants.COL_PATH).to_numpy()
         logger.info("Preprocessing inference data...")
         X_categorical = df[categorical_features]
         X_categorical_encoded = encoder.fit_transform(X_categorical)

@@ -1,4 +1,3 @@
-# test_app.py
 import requests
 
 def test_read_root():
@@ -7,7 +6,6 @@ def test_read_root():
     assert response.json() == {"message": "Welcome to the FastAPI Model Inference API!"}
 
 def test_predict_below_50k():
-    # Test for the ML model's prediction when the income is below 50k
     data = {
         "age": 15,
         "workclass": "State-gov",
@@ -32,7 +30,6 @@ def test_predict_below_50k():
     assert result["predictions"][0] == 0
 
 def test_predict_above_50k():
-    # Test for the ML model's prediction when the income is above 50k
     data = {
         "age": 45,
         "workclass": "Private",

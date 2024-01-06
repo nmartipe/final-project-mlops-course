@@ -1,13 +1,9 @@
-import os
 import pytest
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
-from utils.model import load_model, train_model, compute_model_metrics
-
-model_path = '../model/model.pkl'
+from src.lib.utils.model import load_model, train_model, compute_model_metrics
+from src.constants import Constants
 
 @pytest.fixture
 def sample_data():
@@ -18,7 +14,7 @@ def sample_data():
     return X_train, X_test, y_train, y_test
 
 def test_load_model():
-    model = load_model(model_path)
+    model = load_model(Constants.MODEL_PATH)
     assert model is not None
 
 def test_train_model(sample_data):
