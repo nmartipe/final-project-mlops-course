@@ -45,23 +45,24 @@ class InputData(BaseModel):
     class Config:
         allow_population_by_field_name = True
 
-# Create a FastAPI app
 app = FastAPI()
 
-# Root endpoint with a welcome message
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the FastAPI Model Inference API!"}
 
-# POST endpoint for model inference
 @app.post("/predict")
 def predict(data: InputData):
+    logger.info("Solving '-' problem...")
     original_data = data.dict(by_alias=True)
+    logger.info("Starting preprocessing process...")
     X, *_ = process_data(original_data, categorical_features=cat_features, label="salary", inference = True)
-    logger.info("PROCESS DATA DONEEEEEEEEE")
+    logger.info("Data processed")
     model = load_model(model_path)
+    logger.info("Getting prediction...")
     prediction = inference(model, X)
-    logger.info("PREDICTION DONEEEEEEEEE")
+    logger.info("Prediction is:")
+    logger.info(prediction)
 
     return {"predictions": [int(prediction)]}
 

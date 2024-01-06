@@ -2,8 +2,9 @@ from sklearn.metrics import fbeta_score, precision_score, recall_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 import joblib
-import numpy as np
-import json
+import logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
+logger = logging.getLogger()
 
 def load_model(model_path):
     return joblib.load(model_path)
@@ -28,7 +29,7 @@ def train_model(X_train, y_train):
     model
         Trained machine learning model.
     """
-
+    logger.info("Training model with hyperparameter tunning...")
     param_grid = {
         'n_estimators': [100, 200],
         'max_depth': [None, 10, 20],
@@ -39,7 +40,8 @@ def train_model(X_train, y_train):
     grid_search = GridSearchCV(estimator=base_model, param_grid=param_grid, cv=5, n_jobs=-1, verbose=2)
     grid_search.fit(X_train, y_train)
     best_model = grid_search.best_estimator_
-    print("Best Hyperparameters:", grid_search.best_params_)
+    logger.info("Best Hyperparameters:")
+    logger.info(grid_search.best_params_)
 
     return best_model
 
@@ -83,15 +85,15 @@ def compute_model_metrics_by_slice(X, y, model, cat_features):
     metrics : dict
         Dictionary containing precision, recall, and F1 for each slice.
     """
+    logger.info("Getting overall metrics...")
     metrics = {}
     preds = inference(model, X)
     overall_precision, overall_recall, overall_fbeta = compute_model_metrics(y, preds)
     metrics['overall'] = {'precision': overall_precision, 'recall': overall_recall, 'fbeta': overall_fbeta}
 
-    # Calculate metrics for each slice
+    logger.info("Calculating metrics for each slice...")
     for cat_feature in cat_features:
         columns = X.filter(like=cat_feature).columns
-
         for column in columns:
             mask = (X[column] == 1)
             X_slice = X[mask]

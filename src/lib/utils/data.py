@@ -13,7 +13,9 @@ cols_path = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(), './model/
 
 
 def load_clean_data(file_path):
+    logger.info("Loading data...")
     df = pd.read_csv(file_path)
+    logger.info("Cleaning white spaces...")
     df.columns = df.columns.str.strip()
     df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
     return df
@@ -58,23 +60,24 @@ def process_data(df, categorical_features=[], label=None, inference = False):
         passed in.
     """
     if inference == False:
+        logger.info("We are not in inference process")
         if label is not None:
             y = df[label]
             X = df.drop([label], axis=1)
         else:
             y = np.array([])
-
+        logger.info("Preprocessing categorical info...")
         X_categorical = X[categorical_features]
 
         encoder = OneHotEncoder(sparse=False, handle_unknown="ignore")
         lb = LabelBinarizer()
 
-        # Apply OneHotEncoding to categorical features
+        logger.info("Applying OneHotEncoding to categorical features...")
         X_categorical_encoded = encoder.fit_transform(X_categorical)
         X_categorical_encoded_columns = encoder.get_feature_names_out(categorical_features)
         X_categorical_encoded_df = pd.DataFrame(X_categorical_encoded, columns=X_categorical_encoded_columns)
 
-        # Apply LabelBinarizer to labels
+        logger.info("Applying LabelBinarizer to labels...")
         y = lb.fit_transform(y.values).ravel()
 
         X_continuous = X.drop(categorical_features, axis=1)
@@ -82,9 +85,12 @@ def process_data(df, categorical_features=[], label=None, inference = False):
         
         return X, y, encoder
     else:
+        logger.info("We are in inference process")
         df = pd.DataFrame([df])
+        logger.info("Loading encoder...")
         encoder = joblib.load(encoder_path)
         encoded_columns = joblib.load(cols_path).to_numpy()
+        logger.info("Preprocessing inference data...")
         X_categorical = df[categorical_features]
         X_categorical_encoded = encoder.fit_transform(X_categorical)
         X_categorical_encoded_columns = encoder.get_feature_names_out(categorical_features)
@@ -95,7 +101,5 @@ def process_data(df, categorical_features=[], label=None, inference = False):
         missing_columns = np.setdiff1d(encoded_columns, X.columns.to_numpy())
         X = pd.concat([X, pd.DataFrame(0, index=X.index, columns=missing_columns)], axis=1)
         X = X[encoded_columns]
-        logger.info("HOLAAA LUISSSSSS")
-        logger.info(X.columns)
 
         return X, None, None

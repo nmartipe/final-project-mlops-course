@@ -16,7 +16,6 @@ def sample_data():
     return X_train, X_test, y_train, y_test
 
 def test_save_model_and_encoder(sample_data):
-    X_train, _, _, _ = sample_data
     model = RandomForestClassifier(random_state=42)
     encoder = OneHotEncoder()
     model_path = 'test_model.pkl'
