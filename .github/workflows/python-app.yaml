@@ -30,3 +30,9 @@ jobs:
     - name: Test model with pytest
       run: |
         pytest src/lib/test_model_code.py
+    - name: Deploy
+        if: github.ref == 'refs/heads/master'
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
