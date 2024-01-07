@@ -22,7 +22,7 @@ if __name__ == "__main__":
     logger.info("Getting model metrics...")
     metrics = compute_model_metrics_by_slice(X_test, y_test, model, Constants.CAT_FEATURES)
     logger.info(metrics)
-    logger.info("Saving model metrics in model/metrics.txt...")
+    logger.info("Saving model metrics in model/slice_output.txt...")
     with open(Constants.METRICS_PATH, 'w') as f:
         metrics_str = json.dumps(metrics, indent=2)
         f.write(metrics_str)

@@ -11,7 +11,7 @@ class Constants:
     MODEL_PATH = get_absolute_path('./model/model.pkl')
     ENCODER_PATH = get_absolute_path('./data/encoder.pkl')
     COL_PATH = get_absolute_path('./data/encoded_columns.pkl')
-    METRICS_PATH = get_absolute_path('./model/metrics.txt')
+    METRICS_PATH = get_absolute_path('./model/slice_output.txt')
     
     CAT_FEATURES = [
             "workclass",

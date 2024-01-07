@@ -32,7 +32,7 @@ Recall, also known as sensitivity or true positive rate, measures the ratio of c
 The F1-score is the harmonic mean of precision and recall, providing a balanced measure of a model's performance. It is particularly useful when there is an uneven class distribution. The F1-score ranges between 0 and 1, where a higher value indicates a better balance between precision and recall.
 
 ### Metrics results
-The model's performance on various metrics, including precision, recall, and F1-score, is summarized below. For a detailed breakdown of metrics across all columns and slices, please refer to the 'metrics.txt' document.
+The model's performance on various metrics, including precision, recall, and F1-score, is summarized below. For a detailed breakdown of metrics across all columns and slices, please refer to the 'slice_output.txt' document.
 
 | Slice                             | Precision | Recall  | F1-Score |
 |-----------------------------------|-----------|---------|----------|
